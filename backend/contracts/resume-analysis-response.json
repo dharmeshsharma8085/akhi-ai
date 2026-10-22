@@ -1,0 +1,23 @@
+{
+  "status": "success",
+  "resume_summary": "Candidate with Python and machine learning experience",
+  "skills": [
+    {
+      "name": "Python",
+      "evidence": "Listed in the skills section",
+      "confidence": 0.95
+    }
+  ],
+  "experience_summary": [],
+  "potential_skill_gaps": [
+    {
+      "skill": "Automated Testing",
+      "reason": "Limited evidence in the resume",
+      "priority": "medium"
+    }
+  ],
+  "recommended_next_steps": [
+    "Add relevant testing experience if applicable"
+  ],
+  "disclaimer": "Missing resume evidence does not prove a candidate lacks a skill."
+}
