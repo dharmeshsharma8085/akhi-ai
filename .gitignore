@@ -1,8 +1,75 @@
+
+# Environment variables and secrets
 .env
+.env.*
+!.env.example
+.envrc
 **/.env
+**/.env.*
+
+# Python virtual environments
 .venv/
 **/.venv/
+venv/
+env/
+ENV/
+
+# Python cache and compiled files
 __pycache__/
 *.py[cod]
+*$py.class
+
+# Python build and packaging
+build/
+dist/
+downloads/
+eggs/
+.eggs/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+.Python
+
+# Python testing and coverage
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+
+# Python tooling
+.mypy_cache/
+.dmypy.json
+.pyre/
+.pytype/
+.ruff_cache/
+.ipynb_checkpoints/
+
+# Frontend dependencies and builds
 node_modules/
 dist/
+
+# IDE and editor
+.vscode/
+.idea/
+.spyderproject
+.spyproject
+.ropeproject
+
+# Logs and temporary files
+*.log
+tempCodeRunnerFile.py
+
+# Local databases
+db.sqlite3
+db.sqlite3-journal
+
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# OS files
+.DS_Store
+Thumbs.db
