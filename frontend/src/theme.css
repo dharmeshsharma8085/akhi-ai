@@ -1,0 +1,131 @@
+/* AKHI AI theme toggle and dark-mode overrides. Imported after App.css. */
+.topbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 13px;
+  border: 1px solid #e5e3ef;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #39334d;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, color 180ms ease;
+}
+
+.theme-toggle span {
+  font-size: 17px;
+  line-height: 1;
+}
+
+.theme-toggle:hover {
+  border-color: #7c5cff;
+  background: #f5f1ff;
+}
+
+.app-shell,
+.app-shell * {
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+html[data-theme='dark'],
+html[data-theme='dark'] body {
+  background: #11121a;
+  color: #e8e7f0;
+  color-scheme: dark;
+}
+
+html[data-theme='dark'] .app-shell {
+  background: #11121a !important;
+  color: #e8e7f0 !important;
+}
+
+html[data-theme='dark'] .sidebar,
+html[data-theme='dark'] .feature-card,
+html[data-theme='dark'] .analysis-results,
+html[data-theme='dark'] .topbar,
+html[data-theme='dark'] .profile-avatar {
+  background-color: #191a26 !important;
+  border-color: #303143 !important;
+  color: #e8e7f0 !important;
+}
+
+html[data-theme='dark'] .main-content {
+  background-color: #11121a !important;
+  color: #e8e7f0 !important;
+}
+
+html[data-theme='dark'] .hero-card {
+  background: linear-gradient(135deg, #24203c, #1b1b2b) !important;
+  border-color: #393052 !important;
+  color: #f5f2ff !important;
+}
+
+html[data-theme='dark'] .hero-card h2,
+html[data-theme='dark'] .welcome h1,
+html[data-theme='dark'] .section-heading h2,
+html[data-theme='dark'] .feature-card h3,
+html[data-theme='dark'] .brand,
+html[data-theme='dark'] .sidebar strong,
+html[data-theme='dark'] .analysis-results h2 {
+  color: #f5f3ff !important;
+}
+
+html[data-theme='dark'] .welcome p,
+html[data-theme='dark'] .subtitle,
+html[data-theme='dark'] .hero-card p,
+html[data-theme='dark'] .feature-card p,
+html[data-theme='dark'] .section-heading p,
+html[data-theme='dark'] .sidebar p,
+html[data-theme='dark'] .topbar,
+html[data-theme='dark'] .file-note,
+html[data-theme='dark'] .footer {
+  color: #aaa8bf !important;
+}
+
+html[data-theme='dark'] .nav-item {
+  color: #c5c2d8 !important;
+}
+
+html[data-theme='dark'] .nav-item.active {
+  background: #30264e !important;
+  color: #c7b8ff !important;
+}
+
+html[data-theme='dark'] .theme-toggle {
+  background: #242536;
+  border-color: #414158;
+  color: #f3edff;
+}
+
+html[data-theme='dark'] .theme-toggle:hover {
+  background: #30264e;
+  border-color: #8c70ff;
+}
+
+html[data-theme='dark'] .floating-card,
+html[data-theme='dark'] .pill,
+html[data-theme='dark'] .status {
+  background-color: #28263b !important;
+  border-color: #44405f !important;
+  color: #d8ceff !important;
+}
+
+html[data-theme='dark'] .analysis-results li,
+html[data-theme='dark'] .analysis-results p {
+  color: #d0cede;
+}
+
+@media (max-width: 640px) {
+  .topbar-actions { gap: 6px; }
+  .theme-toggle { padding: 8px 10px; font-size: 12px; }
+  .topbar-actions .status { display: none; }
+}
