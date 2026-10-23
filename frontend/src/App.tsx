@@ -30,6 +30,25 @@ type ResumeAnalysis = {
   disclaimer: string
 }
 
+
+type SkillGapItem = {
+  skill: string
+  status: 'demonstrated' | 'partially_demonstrated' | 'not_demonstrated'
+  evidence: string
+  priority: 'low' | 'medium' | 'high'
+  recommendation: string
+}
+
+type SkillGapAnalysis = {
+  status: 'success' | 'error'
+  target_role: string
+  matching_skills: string[]
+  skill_gaps: SkillGapItem[]
+  recommended_next_steps: string[]
+  disclaimer: string
+}
+
+
 const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000').replace(/\/$/, '')
 const MAX_FILE_SIZE = 5 * 1024 * 1024
 const ALLOWED_EXTENSIONS = ['.pdf', '.docx', '.jpg', '.jpeg']
@@ -38,7 +57,12 @@ function App() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  
   const [analysis, setAnalysis] = useState<ResumeAnalysis | null>(null)
+  const [skillGapLoading, setSkillGapLoading] = useState(false)
+const [skillGapError, setSkillGapError] = useState('')
+const [skillGapAnalysis, setSkillGapAnalysis] =
+  useState<SkillGapAnalysis | null>(null)
   const [theme, setTheme] = useState<'light' | 'dark'>(() => {
     const savedTheme = localStorage.getItem('akhi-ai-theme')
     return savedTheme === 'dark' ? 'dark' : 'light'

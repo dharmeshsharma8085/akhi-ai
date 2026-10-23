@@ -30,3 +30,24 @@ class ResumeAnalysisResponse(BaseModel):
     potential_skill_gaps: list[PotentialSkillGap]
     recommended_next_steps: list[str]
     disclaimer: str
+
+
+class SkillGapItem(BaseModel):
+    skill: str
+    status: Literal[
+        "demonstrated",
+        "partially_demonstrated",
+        "not_demonstrated"
+    ]
+    evidence: str
+    priority: Literal["low", "medium", "high"]
+    recommendation: str
+
+
+class SkillGapAnalysisResponse(BaseModel):
+    status: Literal["success", "error"]
+    target_role: str
+    matching_skills: list[str]
+    skill_gaps: list[SkillGapItem]
+    recommended_next_steps: list[str]
+    disclaimer: str

@@ -5,12 +5,15 @@ from dotenv import load_dotenv
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from starlette.concurrency import run_in_threadpool
-
-from .resume_analyzer import analyze_resume_text
+from .resume_analyzer import (
+    analyze_resume_text,
+    analyze_resume_skill_gaps,
+)
 from .resume_parser import extract_resume_text
-from .schemas import ResumeAnalysisResponse
-
-
+from .schemas import (
+    ResumeAnalysisResponse,
+    SkillGapAnalysisResponse,
+)
 load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 
 logger = logging.getLogger(__name__)
@@ -128,4 +131,77 @@ async def analyze_resume(file: UploadFile = File(...)):
         raise HTTPException(
             status_code=502,
             detail="AI resume analysis failed. Please try again.",
+        ) from None
+
+
+@app.post(
+    "/api/v1/resume/skill-gap",
+    response_model=SkillGapAnalysisResponse,
+)
+async def analyze_resume_skill_gap(file: UploadFile = File(...)):
+    filename = file.filename or ""
+    extension = Path(filename).suffix.lower()
+
+    if extension not in ALLOWED_EXTENSIONS:
+        raise HTTPException(
+            status_code=415,
+            detail="Only PDF, DOCX, JPG, and JPEG files are supported.",
+        )
+
+    try:
+        content = await file.read(MAX_FILE_SIZE + 1)
+    finally:
+        await file.close()
+
+    if not content:
+        raise HTTPException(
+            status_code=400,
+            detail="The uploaded file is empty.",
+        )
+
+    if len(content) > MAX_FILE_SIZE:
+        raise HTTPException(
+            status_code=413,
+            detail="File size must not exceed 5 MB.",
+        )
+
+    if extension == ".pdf" and not content.startswith(b"%PDF-"):
+        raise HTTPException(
+            status_code=400,
+            detail="The uploaded file does not appear to be a valid PDF.",
+        )
+
+    if extension == ".docx" and not content.startswith(b"PK"):
+        raise HTTPException(
+            status_code=400,
+            detail="The uploaded file does not appear to be a valid DOCX.",
+        )
+
+    if extension in {".jpg", ".jpeg"}:
+        if not content.startswith(b"\xff\xd8\xff"):
+            raise HTTPException(
+                status_code=400,
+                detail="The uploaded file does not appear to be a valid JPEG image.",
+            )
+
+    try:
+        resume_text = await run_in_threadpool(
+            extract_resume_text,
+            content,
+            extension,
+        )
+
+        analysis = await run_in_threadpool(
+            analyze_resume_skill_gaps,
+            resume_text,
+        )
+        return analysis
+
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception:
+        logger.exception("Resume skill-gap analysis failed")
+        raise HTTPException(
+            status_code=502,
+            detail="Skill-gap analysis failed. Please try again.",
         ) from None
