@@ -1,9 +1,9 @@
-
 import logging
 from pathlib import Path
-from fastapi.middleware.cors import CORSMiddleware
+
 from dotenv import load_dotenv
 from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
 from starlette.concurrency import run_in_threadpool
 
 from .resume_analyzer import analyze_resume_text
@@ -16,7 +16,6 @@ load_dotenv(Path(__file__).resolve().parents[1] / ".env")
 logger = logging.getLogger(__name__)
 
 MAX_FILE_SIZE = 5 * 1024 * 1024  # 5 MB
-
 ALLOWED_EXTENSIONS = {".pdf", ".docx", ".jpg", ".jpeg"}
 
 app = FastAPI(
@@ -25,9 +24,12 @@ app = FastAPI(
     version="0.1.0",
 )
 
+# Allow the Vite development ports used by the AKHI AI frontend.
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "http://localhost:5173",
+        "http://127.0.0.1:5173",
         "http://localhost:5174",
         "http://127.0.0.1:5174",
     ],
@@ -35,6 +37,7 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+
 
 @app.get("/health")
 def health_check():
@@ -120,7 +123,6 @@ async def analyze_resume(file: UploadFile = File(...)):
             resume_text,
         )
         return analysis
-
     except Exception:
         logger.exception("AI resume analysis failed")
         raise HTTPException(
