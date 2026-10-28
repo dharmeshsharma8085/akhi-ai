@@ -137,6 +137,7 @@ function App() {
   const [roadmapLoading, setRoadmapLoading] = useState(false)
   const [roadmapError, setRoadmapError] = useState('')
   const [careerRoadmap, setCareerRoadmap] = useState<CareerRoadmap | null>(null)
+  const [activePage, setActivePage] = useState<'dashboard' | 'resume' | 'skill-gap' | 'roadmap'>('dashboard')
 
   // Career roadmap inputs are user-provided; do not infer missing personal details.
   const [roadmapRole, setRoadmapRole] = useState('AI Engineer')
@@ -445,13 +446,13 @@ function App() {
 
         <nav className="navigation">
 
-          <a className="nav-item active" href="#dashboard">▦ Dashboard</a>
+          <a className={`nav-item ${activePage === 'dashboard' ? 'active' : ''}`} href="#dashboard" onClick={(event) => { event.preventDefault(); setActivePage('dashboard'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>▦ Dashboard</a>
 
-          <a className="nav-item" href="#resume">▤ Resume Analysis</a>
+          <a className={`nav-item ${activePage === 'resume' ? 'active' : ''}`} href="#resume" onClick={(event) => { event.preventDefault(); setActivePage('resume'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>▤ Resume Analysis</a>
 
-          <a className="nav-item" href="#skill-gap">◈ Skill Gap Analysis</a>
+          <a className={`nav-item ${activePage === 'skill-gap' ? 'active' : ''}`} href="#skill-gap" onClick={(event) => { event.preventDefault(); setActivePage('skill-gap'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>◈ Skill Gap Analysis</a>
 
-          <a className="nav-item" href="#roadmap">◎ Career Roadmap</a>
+          <a className={`nav-item ${activePage === 'roadmap' ? 'active' : ''}`} href="#roadmap-form" onClick={(event) => { event.preventDefault(); setActivePage('roadmap'); window.scrollTo({ top: 0, behavior: 'smooth' }) }}>◎ Career Roadmap</a>
 
           <a className="nav-item" href="#jobs">⌕ Job Matches</a>
 
@@ -475,11 +476,11 @@ function App() {
 
       </aside>
 
-      <main className="main-content" id="dashboard">
+      <main className={`main-content ${activePage}-view`} id="dashboard">
 
         <header className="topbar">
 
-          <span>Workspace / Dashboard</span>
+          <span>Workspace / {{ dashboard: 'Dashboard', resume: 'Resume Analysis', 'skill-gap': 'Skill Gap Analysis', roadmap: 'Career Roadmap' }[activePage]}</span>
 
           <div className="topbar-actions">
 
@@ -520,6 +521,33 @@ function App() {
           </div>
 
         </header>
+
+        {activePage === 'roadmap' && (
+          <section className="roadmap-intro">
+            <p className="eyebrow">YOUR CAREER, YOUR PLAN</p>
+            <h1>Design your next career move.</h1>
+            <p>Build a practical, personalized roadmap around your target role, current level, and available study time. A resume is optional.</p>
+            <div className="roadmap-trust-row"><span>✦ Personalized phases</span><span>✓ Practical milestones</span><span>↗ Clear next steps</span></div>
+          </section>
+        )}
+
+        {activePage === 'resume' && (
+          <section className="roadmap-intro page-intro">
+            <p className="eyebrow">UNDERSTAND YOUR PROFILE</p>
+            <h1>Turn your resume into clear insights.</h1>
+            <p>Upload your CV to review your demonstrated skills, experience, strengths, and actionable improvements.</p>
+            <div className="roadmap-trust-row"><span>✦ Resume insights</span><span>✓ Evidence-based feedback</span><span>↗ Actionable next steps</span></div>
+          </section>
+        )}
+
+        {activePage === 'skill-gap' && (
+          <section className="roadmap-intro page-intro">
+            <p className="eyebrow">KNOW WHAT TO LEARN NEXT</p>
+            <h1>Find the skills between you and your goal.</h1>
+            <p>Analyze your resume against an AI Engineer role to identify matching skills, gaps, and learning priorities.</p>
+            <div className="roadmap-trust-row"><span>✦ Role-based assessment</span><span>✓ Prioritized gaps</span><span>↗ Learning recommendations</span></div>
+          </section>
+        )}
 
         <section className="welcome">
 
@@ -617,7 +645,7 @@ function App() {
 
                 <button
 
-                  className="primary-button"
+                  className="primary-button resume-action"
 
                   type="submit"
 
@@ -631,7 +659,7 @@ function App() {
 
                 <button
 
-                  className="primary-button"
+                  className="primary-button skill-gap-action"
 
                   type="button"
 
@@ -682,12 +710,12 @@ function App() {
         </section>
 
         <section className="analysis-results" id="roadmap-form">
-          <div className="feature-card" style={{ padding: '24px' }}>
+          <div className="feature-card roadmap-form-card" style={{ padding: '28px' }}>
             <div className="section-heading">
               <div>
                 <p className="eyebrow">PERSONALIZED CAREER PLANNING</p>
-                <h2>Build your career roadmap</h2>
-                <p>Answer a few questions. Resume upload is optional, and unknown skills will not be invented.</p>
+                <h2>Tell us where you want to go</h2>
+                <p>Start with what you know today. You can skip skills you are unsure about and refine your plan later.</p>
               </div>
             </div>
             <form onSubmit={handleGenerateRoadmap} style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(230px, 1fr))', gap: '16px' }}>
@@ -754,7 +782,7 @@ function App() {
 
         {analysis && (
 
-          <section className="analysis-results" aria-live="polite">
+          <section className="analysis-results resume-results" id="resume-results" aria-live="polite">
 
             <div className="feature-card results-dropdown">
 
@@ -910,7 +938,7 @@ function App() {
 
         {skillGapAnalysis && (
 
-          <section className="analysis-results" id="skill-gap" aria-live="polite">
+          <section className="analysis-results skill-gap-results" id="skill-gap-results" aria-live="polite">
 
             <div className="feature-card results-dropdown">
 
@@ -1045,7 +1073,7 @@ function App() {
         )}
 
         {roadmapError && (
-          <section className="analysis-results" aria-live="polite">
+          <section className="analysis-results roadmap-error" aria-live="polite">
             <p role="alert" style={{ color: '#c62828' }}>{roadmapError}</p>
           </section>
         )}
@@ -1117,7 +1145,23 @@ function App() {
 
         <section className="feature-grid">
 
-          <article className="feature-card" id="roadmap">
+          <article className="feature-card roadmap-launch-card" role="button" tabIndex={0} onClick={() => { setActivePage('resume'); window.scrollTo({ top: 0, behavior: 'smooth' }) }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setActivePage('resume') }}>
+            <div className="feature-icon purple">▤</div>
+            <span className="feature-status">ANALYSIS</span>
+            <h3>Resume Analysis</h3>
+            <p>Understand your resume strengths, experience, and improvement areas.</p>
+            <span className="text-link">Analyze your resume →</span>
+          </article>
+
+          <article className="feature-card roadmap-launch-card" role="button" tabIndex={0} onClick={() => { setActivePage('skill-gap'); window.scrollTo({ top: 0, behavior: 'smooth' }) }} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setActivePage('skill-gap') }}>
+            <div className="feature-icon blue">◈</div>
+            <span className="feature-status">SKILL PLANNING</span>
+            <h3>Skill Gap Analysis</h3>
+            <p>Discover which skills match your target role and what to learn next.</p>
+            <span className="text-link">Find your skill gaps →</span>
+          </article>
+
+          <article className="feature-card roadmap-launch-card" id="roadmap" role="button" tabIndex={0} onClick={() => setActivePage('roadmap')} onKeyDown={(event) => { if (event.key === 'Enter' || event.key === ' ') setActivePage('roadmap') }}>
 
             <div className="feature-icon purple">◎</div>
 
@@ -1170,6 +1214,34 @@ function App() {
       </main>
 
       <style>{`
+        .roadmap-intro {
+          margin: 18px 0 24px; padding: 34px; border: 1px solid var(--border, rgba(140, 120, 220, .25));
+          border-radius: 24px; background: radial-gradient(circle at 90% 10%, rgba(111, 76, 255, .20), transparent 34%), var(--card, rgba(255,255,255,.03));
+        }
+        .roadmap-intro h1 { margin: 8px 0 12px; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.04em; }
+        .roadmap-intro > p:not(.eyebrow) { max-width: 720px; line-height: 1.7; opacity: .82; }
+        .roadmap-trust-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
+        .roadmap-trust-row span { padding: 9px 12px; border-radius: 999px; background: rgba(111,76,255,.12); font-size: 13px; }
+        .roadmap-form-card { border-radius: 22px; }
+        .roadmap-launch-card { cursor: pointer; transition: transform .18s ease, border-color .18s ease; }
+        .roadmap-launch-card:hover { transform: translateY(-3px); border-color: rgba(111,76,255,.55); }
+        .roadmap-view > :not(.topbar):not(.roadmap-intro):not(#roadmap-form):not(#career-roadmap):not(.roadmap-error) { display: none !important; }
+        .dashboard-view > .roadmap-intro, .dashboard-view > #roadmap-form, .dashboard-view > #career-roadmap, .dashboard-view > .roadmap-error { display: none !important; }
+        .resume-view > :not(.topbar):not(.page-intro):not(.hero-card):not(.resume-results) { display: none !important; }
+        .skill-gap-view > :not(.topbar):not(.page-intro):not(.hero-card):not(.skill-gap-results) { display: none !important; }
+        .resume-view .skill-gap-action, .skill-gap-view .resume-action { display: none !important; }
+        .resume-view .hero-copy h2 { margin-top: 12px; }
+        .resume-view .hero-copy > p, .skill-gap-view .hero-copy > p { max-width: 620px; }
+        .resume-view .hero-card, .skill-gap-view .hero-card { margin-top: 18px; }
+        .resume-view .skill-gap-results, .skill-gap-view .resume-results { display: none !important; }
+        .roadmap-view #roadmap-form { margin-top: 0; }
+        .roadmap-view #roadmap-form .section-heading { margin-bottom: 22px; }
+        .roadmap-view #roadmap-form form { gap: 18px !important; }
+        .roadmap-view #roadmap-form label { font-weight: 600; font-size: 14px; }
+        .roadmap-view #roadmap-form input:not([type="checkbox"]), .roadmap-view #roadmap-form select { width: 100%; min-height: 46px; border-radius: 10px; padding: 10px 12px; }
+        .roadmap-view #roadmap-form label:has(input[type="checkbox"]) { padding: 14px; border-radius: 12px; background: rgba(111,76,255,.08); font-weight: 500; }
+        .roadmap-view #career-roadmap { display: grid; gap: 16px; }
+        @media (max-width: 700px) { .roadmap-intro { padding: 22px; } .roadmap-trust-row { gap: 7px; } }
 
         .results-dropdown {
 
